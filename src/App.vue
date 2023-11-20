@@ -1,5 +1,6 @@
 <template>
-  <h1>Ninja Reaction Timer</h1>
+  <h1>Easy Reaction Timer</h1>
+  
   <div class="card">
     <div class="tools">
       <div class="circle">
@@ -14,7 +15,9 @@
     </div>
     <div class="card__content">
       <button class = "button-14" @click="start" :disabled="isPlaying">play</button>
-  <Block v-if="isPlaying" :delay="delay" />
+  <Block v-if="isPlaying" :delay="delay" @end = "endGame"/>
+  
+    <Results v-if = "isEnd" :score = "score"/>
     </div>
   </div>
   
@@ -22,14 +25,18 @@
 
 <script>
 import Block from './components/Block'
+import Results from './components/Results'
 
 export default {
   name: 'App',
-  components: { Block },
+  components: { Block , Results },
   data() {
     return {
       isPlaying: false,
       delay: null,
+      score: null,
+      isEnd: false
+
     }
   },
   methods: {
@@ -38,6 +45,12 @@ export default {
       this.delay = 2000 + Math.random() * 5000
       this.isPlaying = true
     },
+    endGame(reactionTime){ //we get this reactionTime as argument from the custom event that is listened @end = "endGame" because we sent the reactionTime from Block.vue while emmiting 
+      this.score = reactionTime
+      this.isPlaying = false;
+      this.isEnd = true
+
+    }
   }
 }
 </script>
